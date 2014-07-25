@@ -6,10 +6,73 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_NUM_IPS 16
+#define MAX_IP_LEN 16
 char** getIP(const char* hostname){
-    char** tempIps;
+    char tempIps[MAX_NUM_IPS][MAX_IP_LEN];
     struct addrinfo *answer, hint, *curr;
     int ret;
+
+    bzero(&hint, sizeof(hint));
+    hint.ai_family = AF_INET;
+    hint.ai_socktype = SOCK_STREAM;
+
+    ret = getaddrinfo(hostname, NULL, &hint, &answer);
+    if(ret != 0){
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(ret));
+        return NULL;
+    }
+    int index = 0;
+    for(curr = answer; curr != NULL; curr = curr->ai_next){
+        fprintf(stderr, "inet_ntop\n");
+        inet_ntop(AF_INET,&(((struct sockaddr_in*)(curr->ai_addr))->sin_addr),
+                tempIps[index++],16);
+        fprintf(stderr, "after inet_ntop: %s\n", tempIps[index -1]);
+    }
+    return tempIps;
+}
+
+char* httpCommand(const char* page, const char* hostIp){
+    const int MAX_COMMAND_LEN = 1024;
+    char finalCommand[MAX_COMMAND_LEN];
+    fprintf(stderr, "httpCommand \n");
+
+    char* command ="GET ";
+    strcat(finalCommand, command);
+    fprintf(stderr, "before add GET; %s\n", finalCommand);
+
+    strcat(finalCommand, page);
+    fprintf(stderr, "after add GET; %s\n", finalCommand);
+    char httpVersion[] = " HTTP/1.1\\r\\nHost: ";
+
+    strcat(finalCommand, httpVersion);
+    fprintf(stderr, "after add httpVersion; %s\n", finalCommand);
+
+    strcat(finalCommand, hostIp);
+    fprintf(stderr, "after add hostIP; %s\n", finalCommand);
+
+    char closeHttp[] = "\\r\\nConnection: Close\\r\\n\\r\\n";
+    strcat(finalCommand, closeHttp);
+    fprintf(stderr, "after add close; %s\n", finalCommand);
+    return finalCommand;
+}
+
+int main()
+{
+    int socket_fd;
+    int len;
+    struct sockaddr_in address;
+    int result;
+//    char *strings = "GET #/c/4174/ HTTP/1.1\r\nHost: 192.168.1.12\r\nConnection: Close\r\n\r\n";
+    char ch;
+
+    char* hostname = "www.cnblogs.com";
+    char currIp[MAX_IP_LEN] ;
+
+
+    struct addrinfo *answer, hint, *curr;
+    int ret;
+
     bzero(&hint, sizeof(hint));
     hint.ai_family = AF_INET;
     hint.ai_socktype = SOCK_STREAM;
@@ -20,54 +83,28 @@ char** getIP(const char* hostname){
         return NULL;
     }
     for(curr = answer; curr != NULL; curr = curr->ai_next){
+        fprintf(stderr, "inet_ntop\n");
         inet_ntop(AF_INET,&(((struct sockaddr_in*)(curr->ai_addr))->sin_addr),
-                *tempIps,16);
-    }
-    return tempIps;
-}
+                currIp,16);
+        fprintf(stderr, "after inet_ntop: %s\n", currIp);
 
-char* httpCommand(const char* page, const char* hostIp){
-    char* command ="GET ";
-    int lenOfPage = 0;
-    strcat(command, page);
-    char httpVersion[] = " HTTP/1.1\r\nHost: ";
-    strcat(command, httpVersion);
-    strcat(command, hostIp);
-    char closeHttp[] = "\r\nConnection: Close\r\n\r\n";
-    strcat(command, closeHttp);
-    printf("Command: %s\n", command);
-    return command;
-}
-
-int main()
-{
-    int socket_fd;
-    int len;
-    struct sockaddr_in address;
-    int result;
-    char *strings = "GET #/c/4174/ HTTP/1.1\r\nHost: 192.168.1.12\r\nConnection: Close\r\n\r\n";
-    char ch;
-
-    char* hostname = "www.baidu.com";
-    char** hostIps = NULL;
-    char* currIp = NULL;
-    int index = 0;
-    hostIps = getIP(hostname);
-    do{
-        currIp = hostIps[index++];
         socket_fd = socket(AF_INET, SOCK_STREAM, 0);
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = inet_addr(currIp);
         address.sin_port = htons(80);
         len = sizeof(address);
         result = connect(socket_fd, (struct sockaddr *)&address, len);
+        fprintf(stderr, "after connect\n", currIp);
 
         if(result != -1){
             break;
         }
-    }while(currIp == NULL);
+    }
+
+
+
     char* page = " ";
-    httpCommand(page, currIp);
+    char* strings = httpCommand(page, currIp);
 
     write(socket_fd, strings, strlen(strings));
     while(read(socket_fd, &ch, 1)){

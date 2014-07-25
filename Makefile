@@ -2,5 +2,5 @@ CC=gcc
 SRC= \
     GetWebPage.c
 
-target:
+target:$(SRC)
 	$(CC) -g $(SRC) -o target
