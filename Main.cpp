@@ -11,6 +11,6 @@ int main(int argc, char **argv){
     }
 
     char *url = argv[1];
-    UrlParser* mUrlParser = new Parser(url);
-    mUrlParser.getPage(); 
+    Browser mBrowser = new Browser();
+    mBrowser.openPage(url, false/*need to open a new page?*/);
 }
