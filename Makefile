@@ -1,6 +1,9 @@
 CC=gcc
 SRC= \
-    GetWebPage.c
+    Main.cpp \
+    ApplicationLayerProtocls.h \
+    UrlParser.cpp \
+    UrlParser.h
 
 target:$(SRC)
 	$(CC) -g $(SRC) -o target
