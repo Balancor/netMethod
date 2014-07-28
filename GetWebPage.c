@@ -24,10 +24,8 @@ char** getIP(const char* hostname){
     }
     int index = 0;
     for(curr = answer; curr != NULL; curr = curr->ai_next){
-        fprintf(stderr, "inet_ntop\n");
         inet_ntop(AF_INET,&(((struct sockaddr_in*)(curr->ai_addr))->sin_addr),
                 tempIps[index++],16);
-        fprintf(stderr, "after inet_ntop: %s\n", tempIps[index -1]);
     }
     return tempIps;
 }
@@ -35,25 +33,11 @@ char** getIP(const char* hostname){
 char* httpCommand(const char* page, const char* hostIp){
     const int MAX_COMMAND_LEN = 1024;
     char finalCommand[MAX_COMMAND_LEN];
-    fprintf(stderr, "httpCommand \n");
+    fprintf(stderr, "httpCommand: page: %s\nhostIp: %s \n", page, hostIp);
 
-    char* command ="GET ";
-    strcat(finalCommand, command);
-    fprintf(stderr, "before add GET; %s\n", finalCommand);
+    sprintf(finalCommand, "GET /%s HTTP/1.1\r\nAccept: */*\r\nUser-Agent:Mozilla/4.0\r\n"
+        "Host: %s\r\nConnection:Close\r\n\r\n", page, hostIp);
 
-    strcat(finalCommand, page);
-    fprintf(stderr, "after add GET; %s\n", finalCommand);
-    char httpVersion[] = " HTTP/1.1\\r\\nHost: ";
-
-    strcat(finalCommand, httpVersion);
-    fprintf(stderr, "after add httpVersion; %s\n", finalCommand);
-
-    strcat(finalCommand, hostIp);
-    fprintf(stderr, "after add hostIP; %s\n", finalCommand);
-
-    char closeHttp[] = "\\r\\nConnection: Close\\r\\n\\r\\n";
-    strcat(finalCommand, closeHttp);
-    fprintf(stderr, "after add close; %s\n", finalCommand);
     return finalCommand;
 }
 
@@ -66,7 +50,7 @@ int main()
 //    char *strings = "GET #/c/4174/ HTTP/1.1\r\nHost: 192.168.1.12\r\nConnection: Close\r\n\r\n";
     char ch;
 
-    char* hostname = "www.cnblogs.com";
+    char* hostname = "www.baidu.com";
     char currIp[MAX_IP_LEN] ;
 
 
@@ -103,12 +87,13 @@ int main()
 
 
 
-    char* page = " ";
+    char* page = "";
     char* strings = httpCommand(page, currIp);
 
     write(socket_fd, strings, strlen(strings));
     while(read(socket_fd, &ch, 1)){
         printf("%c", ch);
     }
+    printf("\n");
     close(socket_fd);
 }
