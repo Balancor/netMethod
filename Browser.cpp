@@ -2,9 +2,11 @@
 
 using namespace std;
 
-Browser::Browser(const char* url){
+Browser::Browser(){
+}
+void Browser::openPage(char* url, bool newPage){
     mURL = url;
-    mParser = new Pareser(mURL);
-    mPareser.parse();
-    mParser.dumpUrlParser();
+    mParser = new UrlParser(mURL);
+    mParser->parse();
+    mParser->dumpUrlParser();
 }

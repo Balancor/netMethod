@@ -1,9 +1,10 @@
-CC=gcc
+CC=g++
 SRC= \
     Main.cpp \
-    ApplicationLayerProtocls.h \
     UrlParser.cpp \
-    UrlParser.h
+    UrlParser.h \
+    Browser.h \
+    Browser.cpp
 
 target:$(SRC)
 	$(CC) -g $(SRC) -o target

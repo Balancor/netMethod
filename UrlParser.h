@@ -6,9 +6,9 @@ class UrlParser {
 
 private:
 
-    enum {
-        HTTP   ,
+    enum Protocol {
         HTTPS  ,
+        HTTP   ,
         FTP    ,
         SMTP   ,
         DNS    ,
@@ -16,18 +16,15 @@ private:
         IM     ,
         RIP    ,
         NFS    
-    }Protocol;
+    };
     int mProtocol;
     string mPagePath;
-    string mURL;
+    string mUrl;
     string mHostName;
 
 public:
     UrlParser(const char* url);
     void parse();
     string getProtocol();
-
-
-
-    void dumpUrlParse();
-}
+    void dumpUrlParser();
+};

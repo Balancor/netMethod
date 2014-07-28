@@ -1,4 +1,5 @@
-#include "UrlParse.h"
+#include <string.h>
+#include "UrlParser.h"
 
 using namespace std;
 
@@ -8,47 +9,55 @@ UrlParser::UrlParser(const char* url){
 void UrlParser::parse(){
     int fileIndex = 0; 
     mUrl = getProtocol();
-    fileIndex = find_first_of(mUrl);
-    mHostName = mUrl.substr(0, fileIndex - 1)
-    mPagePath = mUrl.substr(fileIndex, mUrl.size());
-
+    cout<<"after getProtocol(), remain string: "
+        <<mUrl<<endl;
+    fileIndex = mUrl.find_first_of("/");
+    if(fileIndex < 0 ){
+        mHostName = mUrl;
+        mPagePath = ""; 
+    } else {
+        mHostName = mUrl.substr(0, fileIndex - 1);
+        mPagePath = mUrl.substr(fileIndex, mUrl.size());
+    }
 }
 
 string UrlParser::getProtocol(){
     char* protocolType = NULL;
     if(!mUrl.find("https")){
-        mProtocol = Protocol.HTTPS;
+        mProtocol = HTTPS;
         protocolType = "https";
     } else if(!mUrl.find("http")){
-        mProtocol = Protocol.HTTP;
+        mProtocol = HTTP;
         protocolType = "http";
     } else if(!mUrl.find("ftp")){
-        mProtocol = Protocol.FTP;
+        mProtocol = FTP;
         protocolType = "ftp";
     } else if(!mUrl.find("smtp")){
-        mProtocol = Protocol.SMTP;
+        mProtocol = SMTP;
         protocolType = "smtp";
     } else if(!mUrl.find("dns")){
-        mProtocol = Protocol.DNS;
+        mProtocol = DNS;
         protocolType = "dns";
     } else if(!mUrl.find("telnet")){
-        mProtocol = Protocol.TELNET;
+        mProtocol = TELNET;
         protocolType = "telnet";
     } else if(!mUrl.find("im")){
-        mProtocol = Protocol.IM;
+        mProtocol = IM;
         protocolType = "telnet";
     } else if(!mUrl.find("rip")){
-        mProtocol = Protocol.RIP;
+        mProtocol = RIP;
         protocolType = "rip";
     } else if(!mUrl.find("nfs")){
-        mProtocol = Protocol.NFS;
+        mProtocol = NFS;
         protocolType = "nfs";
     }
-    return mUrl.erase(0, strlen(protocolType)+2);
+    cout<<"protocolType: "<<protocolType<<endl;
+    cout<<"strlen(protocolType): "<<strlen(protocolType)<<endl;
+    return mUrl.erase(0, strlen(protocolType)+3);
 }
 
 void UrlParser::dumpUrlParser(){
-    cout<<"mProcotol: "<<mProcotol<<endl;
+    cout<<"mProtocol: "<<mProtocol<<endl;
     cout<<"mHostName: "<<mHostName<<endl;
     cout<<"mPagePath: "<<mPagePath<<endl;
 }
