@@ -10,11 +10,11 @@ HostInfo::HostInfo()
     mHostIpsList(NULL)
 {}
 
-void HostInfo::setHostName(const char* hostname){
-    mHostName = string(hostname);
+void HostInfo::setHostName(string hostname){
+    mHostName = hostname;
 }
 
-string HostInfo::getHostName(const char* hostname){
+string HostInfo::getHostName(){
     return mHostName;
 }
 void HostInfo::setHostPort(int port){
@@ -25,8 +25,8 @@ int HostInfo::getHostPort(){
     return mHostPort;
 }
 
-void HostInfo::setHostIp(const char* ip){
-    mHostIp = string(ip);
+void HostInfo::setHostIp(string ip){
+    mHostIp = ip;
 }
 
 string HostInfo::getHostIp(){

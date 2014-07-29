@@ -8,6 +8,7 @@ class UrlParser {
 private:
 
     enum Protocol {
+        UNKNOWN,
         HTTPS  ,
         HTTP   ,
         FTP    ,

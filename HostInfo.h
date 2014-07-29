@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+
 using namespace std;
 
 class HostInfo {
@@ -10,10 +11,10 @@ private:
 public:
     HostInfo();
     ~HostInfo();
-    void setHostName(const char* hostname);
+    void setHostName(string hostname);
     string getHostName();
     void setHostPort(int prot);
     int getHostPort();
-    void setHostIp(const char* ip);
+    void setHostIp(string ip);
     string getHostIp();
 };

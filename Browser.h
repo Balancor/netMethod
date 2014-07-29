@@ -1,7 +1,12 @@
 #include <iostream>
 #include <list>
+
+#ifndef __BROWSER_HEAD__
 #include "UrlParser.h"
 #include "HostInfo.h"
+#else
+#define __BROWSER_HEAD__ 1
+#endif
 using namespace std;
 
 class Browser {
@@ -10,7 +15,7 @@ private:
        char* mURL;
         UrlParser *mParser;
         list<HostInfo*> mHostInfoList;
-        HostInfo mCurrentHost;
+        HostInfo* mCurrentHost;
         int mSocket;
 
 public:

@@ -67,21 +67,25 @@ string UrlParser::getProtocol(){
 }
 
 void UrlParser::initProtocolAndPortMap(){
-    mProtocolAndPort.insert(make_pair(HTTPS, 443));
-    mProtocolAndPort.insert(make_pair(HTTP, 80));
-/*
-    mProtocolAndPort.insert(FTP, 21);
-    mProtocolAndPort.insert(SMTP, 25);
-    mProtocolAndPort.insert(DNS, 53);
-    mProtocolAndPort.insert(TELNET, 1024);
-    mProtocolAndPort.insert(IM, 443);
-    mProtocolAndPort.insert(RIP, 443);
-    mProtocolAndPort.insert(NFS, 2049);
-*/
+    mProtocolAndPort.insert(pair<Protocol,int>(UNKNOWN,UNKNOWN));
+    mProtocolAndPort.insert(pair<Protocol,int>(HTTPS, 443));
+    mProtocolAndPort.insert(pair<Protocol,int>(HTTP, 80));
+    mProtocolAndPort.insert(pair<Protocol,int>(FTP, 21));
+    mProtocolAndPort.insert(pair<Protocol,int>(SMTP, 25));
+    mProtocolAndPort.insert(pair<Protocol,int>(DNS, 53));
+    mProtocolAndPort.insert(pair<Protocol,int>(TELNET, 1024));
+    mProtocolAndPort.insert(pair<Protocol,int>(IM, 443));
+    mProtocolAndPort.insert(pair<Protocol,int>(RIP, 443));
+    mProtocolAndPort.insert(pair<Protocol,int>(NFS, 2049));
 }
 
 int UrlParser::getHostPort(){
-    return mProtocolAndPort.find(mProtocol);
+    map<Protocol, int>::iterator it;
+    it = mProtocolAndPort.find((UrlParser::Protocol)mProtocol);
+    if(it != mProtocolAndPort.end()){
+        return it->second;
+    }
+    return UNKNOWN; 
 }
 
 void UrlParser::dumpUrlParser(){

@@ -1,10 +1,19 @@
 #include <iostream>
 #include <stdlib.h>
+#include <stdio.h>
+#include <cstring>
 #include <string>
 #include <netdb.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <arpa/inet.h>
 
+#ifndef __BROWSER_UTIL__
+#include "UrlParser.h"
+#include "HostInfo.h"
+#else
+#define __BROWSER_UTIL__ 1
+#endif
 #include "Browser.h"
 
 using namespace std;
@@ -24,14 +33,14 @@ void Browser::initHostInfo(){
     char currIp[MAX_IP_LEN] ;
     int ret;
 
-    bzero(&hint, sizeof(hint));
+    memset(&hint, 0, sizeof(hint));
     hint.ai_family = AF_INET;
     hint.ai_socktype = SOCK_STREAM;
 
-    ret = getaddrinfo(mHostInfo->getHostName(), NULL, &hint, &answer);
+    ret = getaddrinfo((mParser->getHostName()).c_str(), NULL, &hint, &answer);
     if(ret != 0){
         cout<<"getaddrinfo: \n"<<gai_strerror(ret)<<endl;
-        return NULL;
+        return ;
     }
     for(curr = answer; curr != NULL; curr = curr->ai_next){
         inet_ntop(AF_INET,&(((struct sockaddr_in*)(curr->ai_addr))->sin_addr),
@@ -56,7 +65,7 @@ void Browser::connectToHost(){
 
         mSocket = socket(AF_INET, SOCK_STREAM, 0);
         address.sin_family = AF_INET;
-        address.sin_addr.s_addr = inet_addr((*hostInfoIterator)->getHostIp());
+        address.sin_addr.s_addr = inet_addr(((*hostInfoIterator)->getHostIp()).c_str());
         address.sin_port = htons((*hostInfoIterator)->getHostPort());
         len = sizeof(address);
         ret = connect(mSocket, (struct sockaddr *)&address, len);
@@ -74,7 +83,7 @@ void Browser::dumpPage(){
     char ch;
 
     sprintf(finalCommand, "GET /%s HTTP/1.1\r\nAccept: */*\r\nUser-Agent:Mozilla/4.0\r\n"
-            "Host: %s\r\nConnection:Close\r\n\r\n", mParser->getPagePath(), mCurrentHost->getHostIp());
+            "Host: %s\r\nConnection:Close\r\n\r\n", (mParser->getPagePath()).c_str(), (mCurrentHost->getHostIp()).c_str());
 
     write(mSocket, finalCommand, strlen(finalCommand));
     while(read(mSocket, &ch, 1)){
@@ -86,8 +95,5 @@ void Browser::dumpPage(){
 
 
 Browser::~Browser(){
-    delete(mURL);
-    delete(mParser);
-    delete(mHostInfoList);
     close(mSocket);
 };
