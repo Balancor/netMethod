@@ -12,4 +12,6 @@ int main(int argc, char **argv){
     char *url = argv[1];
     Browser* mBrowser = new Browser();
     mBrowser->openPage(url, false/*need to open a new page?*/);
+    mBrowser->initHostInfo();
+    mBrowser->dumpPage();
 }

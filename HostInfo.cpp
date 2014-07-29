@@ -1,3 +1,4 @@
+#include <string>
 #include "HostInfo.h"
 
 using namespace std;
@@ -8,21 +9,26 @@ HostInfo::HostInfo()
     mHostPortsList(NULL),
     mHostIpsList(NULL)
 {}
-void HostInfo::addHostNameAlia(const char* hostname){
-    mHostNameAliasList.push_back(hostname);
+
+void HostInfo::setHostName(const char* hostname){
+    mHostName = string(hostname);
 }
-void HostInfo::removeHostNameAlia(const char* hostname){
-    mHostNameAliasList.remove(hostname);
+
+string HostInfo::getHostName(const char* hostname){
+    return mHostName;
 }
-void HostInfo::addHostPort(const int port){
-    mHostPortsList.push_back(port);
+void HostInfo::setHostPort(int port){
+    mHostPort = port;
 }
-void HostInfo::removeHostPort(const int port){
-    mHostPortsList.remove(port);
+
+int HostInfo::getHostPort(){
+    return mHostPort;
 }
-void HostInfo::addHostIps(const char* hostip){
-    mHostIpsList.push_back(hostip);
+
+void HostInfo::setHostIp(const char* ip){
+    mHostIp = string(ip);
 }
-void HostInfo::removeHostIps(const char* hostip){
-    mHostIpsList.remove(hostip);
+
+string HostInfo::getHostIp(){
+    return mHostIp;
 }

@@ -1,19 +1,19 @@
 #include <iostream>
-
+#include <string>
 using namespace std;
 
 class HostInfo {
 private:
-    char* mHostName;
-    list<char*> mHostNameAliasList;
-    list<int> mHostPortsList;
-    list<char*> mHostIpsList;
+    string mHostName;
+    int mHostPort;
+    string mHostIp;
 public:
     HostInfo();
-    void addHostNameAlia(const char* hostname);
-    void removeHostNameAlia(const char* hostname);
-    void addHostPort(const int port);
-    void removeHostPort(const int port);
-    void addHostIps(const char* hostip);
-    void removeHostIps(const char* hostip);
-}
+    ~HostInfo();
+    void setHostName(const char* hostname);
+    string getHostName();
+    void setHostPort(int prot);
+    int getHostPort();
+    void setHostIp(const char* ip);
+    string getHostIp();
+};

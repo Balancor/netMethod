@@ -1,24 +1,36 @@
 #include <string.h>
+#include <iostream>
+#include <list>
+#include <map>
 #include "UrlParser.h"
 
 using namespace std;
 
 UrlParser::UrlParser(const char* url){
     mUrl = url;
+    initProtocolAndPortMap();
 }
 void UrlParser::parse(){
-    int fileIndex = 0; 
+    int fileIndex = 0;
     mUrl = getProtocol();
     cout<<"after getProtocol(), remain string: "
         <<mUrl<<endl;
     fileIndex = mUrl.find_first_of("/");
     if(fileIndex < 0 ){
         mHostName = mUrl;
-        mPagePath = ""; 
+        mPagePath = "";
     } else {
         mHostName = mUrl.substr(0, fileIndex - 1);
         mPagePath = mUrl.substr(fileIndex, mUrl.size());
     }
+}
+
+string UrlParser::getHostName(){
+    return mHostName;
+}
+
+string UrlParser::getPagePath(){
+    return mPagePath;
 }
 
 string UrlParser::getProtocol(){
@@ -51,9 +63,25 @@ string UrlParser::getProtocol(){
         mProtocol = NFS;
         protocolType = "nfs";
     }
-    cout<<"protocolType: "<<protocolType<<endl;
-    cout<<"strlen(protocolType): "<<strlen(protocolType)<<endl;
     return mUrl.erase(0, strlen(protocolType)+3);
+}
+
+void UrlParser::initProtocolAndPortMap(){
+    mProtocolAndPort.insert(make_pair(HTTPS, 443));
+    mProtocolAndPort.insert(make_pair(HTTP, 80));
+/*
+    mProtocolAndPort.insert(FTP, 21);
+    mProtocolAndPort.insert(SMTP, 25);
+    mProtocolAndPort.insert(DNS, 53);
+    mProtocolAndPort.insert(TELNET, 1024);
+    mProtocolAndPort.insert(IM, 443);
+    mProtocolAndPort.insert(RIP, 443);
+    mProtocolAndPort.insert(NFS, 2049);
+*/
+}
+
+int UrlParser::getHostPort(){
+    return mProtocolAndPort.find(mProtocol);
 }
 
 void UrlParser::dumpUrlParser(){
