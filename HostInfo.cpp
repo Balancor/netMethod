@@ -4,9 +4,6 @@
 using namespace std;
 
 HostInfo::HostInfo()
-    :mHostName(NULL),
-    mHostPort(NULL),
-    mHostIp(NULL)
 {
     cout<<"HostInfo constructor"<<endl;
 }
