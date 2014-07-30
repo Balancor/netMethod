@@ -15,6 +15,8 @@ int main(int argc, char **argv){
     mBrowser->openPage(url, false/*need to open a new page?*/);
     cout<<"mBrowser->initHostInfo()"<<endl;
     mBrowser->initHostInfo();
+    cout<<"mBrowser->connectToHost()"<<endl;
+    mBrowser->connectToHost();
     cout<<"mBrowser->dumpPage()"<<endl;
     mBrowser->dumpPage();
 }

@@ -44,18 +44,12 @@ void Browser::initHostInfo(){
     }
     HostInfo* hostInfo;
     for(curr = answer; curr != NULL; curr = curr->ai_next){
-        cout<<"in loop"<<endl;
         inet_ntop(AF_INET,&(((struct sockaddr_in*)(curr->ai_addr))->sin_addr),
                 currIp,16);
-        cout<<"after inet_ntop"<<endl;
         hostInfo = new HostInfo();
-        cout<<"mParser->getHostName() "<<mParser->getHostName()<<endl;
         hostInfo->setHostName(mParser->getHostName());
-        cout<<"mParser->getHostPort() "<<mParser->getHostPort()<<endl;
         hostInfo->setHostPort(mParser->getHostPort());
-        cout<<"currIp: "<<currIp<<endl;
         hostInfo->setHostIp(currIp);
-        cout<<"mHostInfoList.push_back()"<<endl;
         mHostInfoList.push_back(hostInfo);
     }
     free(hostInfo);
