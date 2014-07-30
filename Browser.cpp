@@ -1,20 +1,15 @@
 #include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <cstring>
-#include <string>
 #include <netdb.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
 
-#ifndef __BROWSER_UTIL__
+#include "Browser.h"
 #include "UrlParser.h"
 #include "HostInfo.h"
-#else
-#define __BROWSER_UTIL__ 1
-#endif
-#include "Browser.h"
 
 using namespace std;
 
@@ -33,25 +28,37 @@ void Browser::initHostInfo(){
     char currIp[MAX_IP_LEN] ;
     int ret;
 
-    memset(&hint, 0, sizeof(hint));
+    bzero(&hint, sizeof(hint));
     hint.ai_family = AF_INET;
     hint.ai_socktype = SOCK_STREAM;
 
-    ret = getaddrinfo((mParser->getHostName()).c_str(), NULL, &hint, &answer);
+    const char* hostName = (mParser->getHostName()).c_str();
+    if(NULL == hostName){
+        cout<<"Cannot get host name!"<<endl;
+        return;
+    }
+    ret = getaddrinfo(hostName, NULL, &hint, &answer);
     if(ret != 0){
         cout<<"getaddrinfo: \n"<<gai_strerror(ret)<<endl;
         return ;
     }
+    HostInfo* hostInfo;
     for(curr = answer; curr != NULL; curr = curr->ai_next){
+        cout<<"in loop"<<endl;
         inet_ntop(AF_INET,&(((struct sockaddr_in*)(curr->ai_addr))->sin_addr),
                 currIp,16);
-         HostInfo* hostInfo = new  HostInfo();
-         hostInfo->setHostName(mParser->getHostName());
-         hostInfo->setHostPort(mParser->getHostPort());
-         hostInfo->setHostIp(currIp);
-         mHostInfoList.push_back(hostInfo);
+        cout<<"after inet_ntop"<<endl;
+        hostInfo = new HostInfo();
+        cout<<"mParser->getHostName() "<<mParser->getHostName()<<endl;
+        hostInfo->setHostName(mParser->getHostName());
+        cout<<"mParser->getHostPort() "<<mParser->getHostPort()<<endl;
+        hostInfo->setHostPort(mParser->getHostPort());
+        cout<<"currIp: "<<currIp<<endl;
+        hostInfo->setHostIp(currIp);
+        cout<<"mHostInfoList.push_back()"<<endl;
+        mHostInfoList.push_back(hostInfo);
     }
-
+    free(hostInfo);
 }
 
 void Browser::connectToHost(){

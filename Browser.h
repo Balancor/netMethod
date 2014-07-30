@@ -1,12 +1,10 @@
+#ifndef __BROWSER_H__
 #include <iostream>
 #include <list>
 
-#ifndef __BROWSER_HEAD__
 #include "UrlParser.h"
 #include "HostInfo.h"
-#else
-#define __BROWSER_HEAD__ 1
-#endif
+#define __BROWSER_H__
 using namespace std;
 
 class Browser {
@@ -27,3 +25,4 @@ public:
     void dumpPage();
     void closePage();
 };
+#endif

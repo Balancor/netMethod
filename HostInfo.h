@@ -1,3 +1,5 @@
+#ifndef __HOSTINFO__
+#define __HOSTINFO__
 #include <iostream>
 #include <string>
 
@@ -10,7 +12,6 @@ private:
     string mHostIp;
 public:
     HostInfo();
-    ~HostInfo();
     void setHostName(string hostname);
     string getHostName();
     void setHostPort(int prot);
@@ -18,3 +19,4 @@ public:
     void setHostIp(string ip);
     string getHostIp();
 };
+#endif

@@ -1,3 +1,5 @@
+#ifndef __URLPARSER__
+#define __URLPARSER__
 #include <iostream>
 #include <string>
 #include <map>
@@ -35,3 +37,4 @@ public:
     void initProtocolAndPortMap();
     void dumpUrlParser();
 };
+#endif
